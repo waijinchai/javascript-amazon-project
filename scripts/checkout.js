@@ -1,10 +1,10 @@
-import {cart, removeFromCart, calculateCartQuantity} from "../data/cart.js";
+import {cart, removeFromCart, calculateCartQuantity, updateQuantity} from "../data/cart.js";
 import {products} from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 
 updateCartQuantity();
 
-export function updateCartQuantity() {
+function updateCartQuantity() {
     let cartQuantity = calculateCartQuantity();
 
     document.querySelector(".js-return-to-home-link").innerHTML = `${cartQuantity} Items`;
@@ -44,10 +44,16 @@ cart.forEach((cartItem) => {
                     </div>
                     <div class="product-quantity">
                         <span>
-                        Quantity: <span class="quantity-label">${cartItem.quantity}</span>
+                        Quantity: <span class="quantity-label js-quantity-label-${matchingProduct.id}">${cartItem.quantity}</span>
                         </span>
-                        <span class="update-quantity-link link-primary">
+                        <span class="update-quantity-link link-primary js-update-link"
+                        data-product-id="${matchingProduct.id}">
                         Update
+                        </span>
+                        <input class="quantity-input js-quantity-input-${matchingProduct.id}">
+                        <span class="save-quantity-link link-primary js-save-link"
+                        data-product-id="${matchingProduct.id}">
+                        Save
                         </span>
                         <span class="delete-quantity-link link-primary js-delete-link"
                         data-product-id="${matchingProduct.id}">
@@ -108,6 +114,7 @@ cart.forEach((cartItem) => {
 // add HTML to the webpage using the cart data
 document.querySelector(".js-order-summary").innerHTML = cartSummaryHTML;
 
+// make the Delete links interactive
 document.querySelectorAll(".js-delete-link")
     .forEach((link) => {
         link.addEventListener("click", () => {
@@ -118,4 +125,44 @@ document.querySelectorAll(".js-delete-link")
             container.remove();
             updateCartQuantity();
         })
+    });
+
+// make the Update links interactive
+document.querySelectorAll(".js-update-link")
+    .forEach((link) => {
+        link.addEventListener("click", () => {
+            const { productId } = link.dataset;
+            const container = document.querySelector(`.js-cart-item-container-${productId}`);
+
+            container.classList.add("is-editing-quantity");
+        });
+    });
+
+document.querySelectorAll(".js-save-link")
+    .forEach((link) => {
+        link.addEventListener("click", () => {
+            const { productId } = link.dataset;
+            const container = document.querySelector(`.js-cart-item-container-${productId}`);
+            const newQuantity = Number(document.querySelector(`.js-quantity-input-${productId}`).value);
+
+            // validate the new quantity 
+            if (newQuantity < 0 || newQuantity >= 1000) {
+                alert("Quantity must be at least 0 and less than 1000");
+                return;
+            }
+
+            container.classList.remove("is-editing-quantity");
+
+            updateQuantity(productId, newQuantity);
+            updateCartQuantity();
+
+            const quantityLabel = document.querySelector(`.js-quantity-label-${productId}`)
+            quantityLabel.innerHTML = newQuantity;
+
+            // remove item from cart is new quantity is 0
+            if (newQuantity == 0) {
+                removeFromCart(productId);
+                container.remove();
+            }
+        });
     });
