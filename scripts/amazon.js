@@ -1,4 +1,4 @@
-import {cart} from "../data/cart.js";
+import {cart, addToCart} from "../data/cart.js";
 import {products} from "../data/products.js";
 
 let productsHTML = "";
@@ -59,6 +59,17 @@ products.forEach((product) => {
 // add HTML to the webpage
 document.querySelector(".js-products-grid").innerHTML = productsHTML;
 
+function updateCartQuantity() {
+    let cartQuantity = 0;
+
+    cart.forEach((cartItem) => {
+        cartQuantity += cartItem.quantity;
+    })
+
+    // update the quantity on the page
+    document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+}
+
 // make the Add to Cart buttons interactive
 document.querySelectorAll(".js-add-to-cart")
     .forEach((button) => {
@@ -69,30 +80,8 @@ document.querySelectorAll(".js-add-to-cart")
             const quantity = Number(document.querySelector(`.js-quantity-selector-${productId}`).value);
             const addedMessage = document.querySelector(`.js-added-to-cart-${productId}`);
 
-            let matchingItem;
-            
-            cart.forEach((item) => {
-                if (productId === item.productId) {
-                    matchingItem = item;
-                }
-            });
-
-            if (matchingItem) {
-                matchingItem.quantity += quantity;
-            } else {
-                cart.push({
-                    productId,
-                    quantity
-                });
-            }
-
-            let cartQuantity = 0;
-
-            cart.forEach((item) => {
-                cartQuantity += item.quantity;
-            });
-
-            document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+            addToCart(productId);
+            updateCartQuantity();
 
             // display that the item is added
             addedMessage.classList.add("added-to-cart-toggle");
