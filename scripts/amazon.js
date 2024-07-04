@@ -80,7 +80,7 @@ document.querySelectorAll(".js-add-to-cart")
             const quantity = Number(document.querySelector(`.js-quantity-selector-${productId}`).value);
             const addedMessage = document.querySelector(`.js-added-to-cart-${productId}`);
 
-            addToCart(productId);
+            addToCart(productId, quantity);
             updateCartQuantity();
 
             // display that the item is added
