@@ -77,6 +77,7 @@ class Appliance extends Product {
 
 export let products = [];
 
+// load products from backend
 export function loadProducts(fun) {
   const xhr = new XMLHttpRequest();
 
