@@ -69,12 +69,10 @@ async function renderOrders() {
                 </div>
 
                 <div class="product-actions">
-                    <a href="tracking.html">
-                        <button class="track-package-button button-secondary js-track-package-button"
-                        data-order-id="${order.id}" data-product-id="${product.id}">
-                            Track package
-                        </button>
-                    </a>
+                    <button class="track-package-button button-secondary js-track-package-button"
+                    data-order-id="${order.id}" data-product-id="${product.id}">
+                        Track package
+                    </button>
                 </div>
             `;
         });
@@ -104,7 +102,7 @@ async function renderOrders() {
     document.querySelectorAll(".js-track-package-button").forEach((button) => {
         button.addEventListener("click", () => {
             const { orderId, productId } = button.dataset;
-            window.location.href = `tracking.html?orderId="${orderId}"&productId="${productId}"`
+            window.location.href = `tracking.html?orderId=${orderId}&productId=${productId}`
         });
     })
 }
