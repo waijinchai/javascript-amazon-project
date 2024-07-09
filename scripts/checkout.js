@@ -2,7 +2,7 @@ import { renderOrderSummary } from "./checkout/orderSummary.js";
 import { renderPaymentSummary } from "./checkout/paymentSummary.js";
 import { renderCheckoutHeader } from "./checkout/checkoutHeader.js";
 import { loadProducts, loadProductsFetch } from "../data/products.js";
-import { loadCart, loadCartFetch, loadProductsFetch } from "../data/cart.js";
+import { loadCart, loadCartFetch } from "../data/cart.js";
 // import "../data/cart-oop.js";
 // import "../data/backend-practice.js";
 
