@@ -7,7 +7,26 @@ loadProducts(renderProductsGrid);
 function renderProductsGrid() {
     let productsHTML = "";
 
-    products.forEach((product) => {
+    const url = new URL(window.location.href);
+    const search = url.searchParams.get("search");
+
+    let filteredProducts = products;
+
+    if (search) {
+        filteredProducts = filteredProducts.filter((product) => {
+            let matchingKeyword = false;
+
+            product.keywords.forEach((keyword) => {
+                if (keyword.toLowerCase() === search.toLowerCase()) {
+                    matchingKeyword = true;
+                }
+            });
+
+            return matchingKeyword || product.name.toLowerCase().includes(search.toLowerCase());
+        });
+    }
+
+    filteredProducts.forEach((product) => {
         productsHTML += `
             <div class="product-container">
                 <div class="product-image-container">
@@ -101,4 +120,18 @@ function renderProductsGrid() {
                 addedMessageTimeoutId = timeoutId;
             });
         });
+
+    // make the search button interactive
+    document.querySelector(".js-search-button").addEventListener("click", () => {
+        const search = document.querySelector(".js-search-bar").value;
+        window.location.href = `amazon.html?search=${search}`;
+    });
+
+    // make the search bar interactive
+    document.querySelector(".js-search-bar").addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            const search = document.querySelector(".js-search-bar").value;
+            window.location.href = `amazon.html?search=${search}`;
+        }
+    });
 }
